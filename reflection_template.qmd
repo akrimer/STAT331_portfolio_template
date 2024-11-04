@@ -1,6 +1,6 @@
 ---
 title: "STAT 331 Portfolio"
-author: "Your Name Goes Here"
+author: "Aaron Krimer"
 format: 
   html: 
     self-contained: true
@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an __.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_\_.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from Lab or Challenge assignments where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -21,29 +21,41 @@ execute:
 
 -   `csv`
 
+    Location: Challenge 2, Getting Set-up
+
 ```{r}
 #| label: wd-1-csv
+# Reading in the data
+surveys <- read_csv("data/surveys.csv")
 
 ```
 
--   `xlsx`
+-   `xlsx`Location: Practice Activity 4
 
 ```{r}
 #| label: wd-1-xlsx
-
+military <- read_xlsx(here::here("data", 
+                                 "gov_spending_per_capita.xlsx"), 
+                      sheet = "Share of Govt. spending", 
+                      skip  = 9, 
+                      n_max = 176)
 ```
 
--   `txt`
+-   `txt`Location: Practice Activity 5
 
 ```{r}
 #| label: wd-1-txt
-
+message_data <- read_csv("https://github.com/earobinson95/stat331-calpoly/raw/master/practice-activities/data/scrambled_message.txt")
 ```
 
-**WD-2: I can select necessary columns from a dataset.**
+**WD-2: I can select necessary columns from a dataset.\
+**Location: Lab 1, Problem 5
 
 ```{r}
 #| label: wd-2
+# Select specific columns from the dataset
+surveys_selected <- surveys %>% 
+  select(species_id, weight, hindfoot_length)
 
 ```
 
@@ -51,29 +63,42 @@ execute:
 
 -   numeric
 
+    Lab 1, Problem 3
+
 ```{r}
 #| label: wd-3-numeric
-
+filtered_data <- surveys %>%
+  filter(weight > 100)
 ```
 
 -   character -- specifically a string (example must use functions from **stringr**)
 
+    Location: Lab 5, Investigating the Gym and License Plate
+
 ```{r}
 #| label: wd-3-string
+drivers_license <- drivers_license %>%
+  filter(str_detect(plate_number, "H42W"))
 
 ```
 
--   factor
+-   factor\
+    Location: Lab 5, Problem 3
 
 ```{r}
 #| label: wd-3-factor
-
+species_filtered <- surveys %>%
+  filter(species_id %in% c("DM", "DO"))
 ```
 
--   date (example must use functions from **lubridate**)
+-   date (example must use functions from **lubridate**)\
+    Location: Lab 3, Problem 5
 
 ```{r}
 #| label: wd-3-date
+surveys <- surveys %>%
+  filter(year > 2000, month %in% c(1, 2, 3)) %>%
+  mutate(date = make_date(year, month, day))
 
 ```
 
@@ -81,91 +106,125 @@ execute:
 
 -   numeric (using `as.numeric()` is not sufficient)
 
+    Location: Lab 2, Problem 7
+
 ```{r}
 #| label: wd-4-numeric
+surveys <- surveys %>%
+  mutate(weight_kg = weight / 1000)  # Convert weight from grams to kilograms
+
 
 ```
 
--   character -- specifically a string (example must use functions from **stringr**)
+-   character -- specifically a string (example must use functions from **stringr**)\
+    Location: Lab 2, Problem 6
 
 ```{r}
 #| label: wd-4-string
+surveys <- surveys %>%
+  mutate(species_upper = str_to_upper(species_id))  # Convert species_id to uppercase
+
 
 ```
 
 -   factor (example must use functions from **forcats**)
 
+    Lab 1, Problem 6
+
 ```{r}
 #| label: wd-4-factor
+ToothGrowth %>%
+  mutate(dose = as.factor(dose)) %>%
+  ggplot(mapping = aes(x = dose, y = len)) +
+  geom_boxplot() +
+  labs(x = "Dose of Supplement (mg/day)",
+       y = "Length of Teeth (mm)",
+       caption = "Figure 2: Boxplot showing the effect of supplement dose on tooth length.")
 
 ```
 
 -   date (example must use functions from **lubridate**)
 
+    Location: Lab 3, Problem 3
+
 ```{r}
 #| label: wd-4-date
+surveys <- surveys %>%
+  mutate(year_month = make_date(year, month))  # Create new date variable from year and month columns
 
 ```
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
 
--   `left_join()`
+-   `left_join()`Location: Lab 5, Problem 4
 
 ```{r}
 #| label: wd-5-left
+merged_data <- left_join(surveys, species, by = "species_id")
 
 ```
 
--   `right_join()`
+-   `right_join()`Location: Lab 5, Problem 6
 
 ```{r}
 #| label: wd-5-right
+merged_data <- right_join(surveys, plots, by = "plot_id")
 
 ```
 
--   `inner_join()`
+-   `inner_join()`Lab 5, Problem 8
 
 ```{r}
 #| label: wd-5-inner
+merged_data <- inner_join(species, plots, by = "plot_id")
 
 ```
 
--   `full_join()`
+-   `full_join()`Lab 5, Problem 8
 
 ```{r}
 #| label: wd-5-full
+merged_data <- full_join(surveys, species, by = "species_id")
 
 ```
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
 
--   `semi_join()`
+-   `semi_join()`Location: Lab 5, Problem 4
 
 ```{r}
 #| label: wd-6-semi
+GOT_EM <- person %>%
+  filter(str_detect(name, "Germuska|Bowers")) %>%
+  semi_join(drivers_license, by = c("license_id" = "id"))
 
 ```
 
--   `anti_join()`
+-   `anti_join()`Location: Lab 5, Problem 6
 
 ```{r}
 #| label: wd-6-anti
+filtered_data <- anti_join(surveys, missing_species, by = "species_id")
 
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer()`
+-   `pivot_longer()`Location: Lab 5, Problem 7
 
 ```{r}
 #| label: wd-7-long
+long_data <- surveys %>%
+  pivot_longer(cols = c(weight, hindfoot_length), names_to = "measurement", values_to = "value")
 
 ```
 
--   `pivot_wider()`
+-   `pivot_wider()`Location: Lab 5, Problem 9
 
 ```{r}
 #| label: wd-7-wide
+wide_data <- surveys %>%
+  pivot_wider(names_from = measurement, values_from = value)
 
 ```
 
@@ -173,44 +232,79 @@ execute:
 
 **R-1: I can create professional looking, reproducible analyses using RStudio projects, Quarto documents, and the here package.**
 
-I've done this in the following provided assignments:
+I've done this in the following provided assignments:\
+Lab 1\
+Lab 2\
+Lab 3 \
+Lab 4\
+lab 5
 
 **R-2: I can write well documented and tidy code.**
 
--   Example of **ggplot2** plotting
+-   Example of **ggplot2** plotting\
+    Location: Lab 1, Problem 6
 
 ```{r}
 #| label: r-2-1
+ggplot(data = ToothGrowth, mapping = aes(x = supp, y = len)) +
+  geom_boxplot() +
+  labs(
+    x = "Supplement",
+    y = "Length of Teeth (mm)",
+    caption = "Figure 1: Boxplot showing the effect of supplement type on tooth length."
+  )
 
 ```
 
--   Example of **dplyr** pipeline
+-   Example of **dplyr** pipeline\
+    Location: Lab 2, Problem 9
 
 ```{r}
 #| label: r-2-2
+surveys %>%
+  filter(!is.na(weight)) %>%
+  group_by(species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
 
 ```
 
--   Example of function formatting
+-   Example of function formatting\
+    Locoation: Lab 5, Problem 4
 
 ```{r}
 #| label: r-2-3
+calculate_mean <- function(data, column) {
+  mean(data[[column]], na.rm = TRUE)
+}
 
 ```
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
 
--   Example -- any context
+-   Example -- any context\
+    Location: Lab 5, Problem 4
+
+    This function accepts a dataframe (data), a column name (column), and a statistical function (stat_function) with a default value of mean. The function is written in a way that it can easily adapt to different inputs without breaking(pesky N/A, and missing values), making it robust and flexible for different use cases
 
 ```{r}
 #| label: r-3-example
+calculate_stat <- function(data, column, stat_function = mean, na_rm = TRUE) {
+  stat_function(data[[column]], na.rm = na_rm)
+}
 
 ```
 
--   Example of function stops
+-   Example of function stops\
+    Location: Lab 5, Problem 5
 
 ```{r}
 #| label: r-3-function-stops
+calculate_mean <- function(data, column) {
+  if (!column %in% names(data)) {
+    stop("Column not found in the data.")
+  }
+  mean(data[[column]], na.rm = TRUE)
+}
 
 ```
 
@@ -218,88 +312,228 @@ I've done this in the following provided assignments:
 
 **DVS-1: I can create visualizations for a *variety* of variable types (e.g., numeric, character, factor, date)**
 
--   at least two numeric variables
+-   at least two numeric variables\
+    Location: Lab 2, Problem 15
 
 ```{r}
 #| label: dvs-1-num
+ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
+  geom_point() +
+  labs(x = "Weight (g)", y = "Hindfoot Length (mm)")
 
 ```
 
--   at least one numeric variable and one categorical variable
+-   at least one numeric variable and one categorical variable\
+    Location: Lab 2, Problem 15
 
 ```{r}
 #| label: dvs-2-num-cat
+ggplot(data = surveys, mapping = aes(x = species_id, y = weight)) +
+  geom_boxplot() +
+  labs(x = "Species ID", y = "Weight (g)")
 
 ```
 
--   at least two categorical variables
+-   at least two categorical variables\
+    Location: Lab 2, Problem 15
 
 ```{r}
 #| label: dvs-2-cat
+ggplot(data = surveys, mapping = aes(x = species_id, fill = genus)) +
+  geom_bar() +
+  labs(x = "Species ID", fill = "Genus")
 
 ```
 
--   dates (timeseries plot)
+-   dates (timeseries plot)\
+    Location: Lab 2, Problem 15
 
 ```{r}
 #| label: dvs-2-date
+ggplot(data = surveys, mapping = aes(x = date, y = weight)) +
+  geom_line() +
+  labs(x = "Date", y = "Weight (g)")
 
 ```
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
 
--   I can ensure people don't tilt their head
+-   I can ensure people don't tilt their head\
+    Loaction: Challenge 3, Question 2
 
 ```{r}
 #| label: dvs-2-1
-
+# code chunk for Q13
+ggplot(data = teacher_evals_compare, aes(x = sen_level, fill = SET_level)) +
+  geom_bar(position = "fill") +  
+  labs(
+    title = "Number of Sections",
+    x = "Seniority of Instructor", 
+    y = "Proportion",
+    fill = "SET Level"  # Legend title
+  ) +
+  scale_fill_manual(values = c("steelblue", "orange3")) +  
+  theme_minimal()  
 ```
 
--   I can modify the text in my plot to be more readable
+-   I can modify the text in my plot to be more readable\
+    Location: Lab 2 problem 15
 
 ```{r}
 #| label: dvs-2-2
-
+#| label: rotated-boxplot
+ggplot(data = surveys, mapping = aes(x = weight, y = species_id)) +
+  geom_boxplot(outlier.shape = NA) +  # Removing outliers
+  geom_jitter(height = 0.2, color = "steelblue", alpha = 0.5) +  
+  labs(
+    title = "Distribution of Weight by Species",
+    x = "Weight (g)",  # Adjusted x-axis label
+    y = "Species"  # Adjusted y-axis label
+  ) +
+  theme(
+    axis.text.y = element_text(angle = 0),  
+    axis.title.x = element_text(margin = margin(t = 10)),  # Adjusting x-axis margin
+    axis.title.y = element_text(margin = margin(r = 10))  # Adjusting y-axis margin
+  )
 ```
 
--   I can reorder my legend to align with the colors in my plot
+-   I can reorder my legend to align with the colors in my plot\
+    Location: Lab 4, Problem 6
 
 ```{r}
 #| label: dvs-2-3
+#reshape the dataset to create a long format
+ca_childcare_long <- ca_childcare %>%
+  pivot_longer(
+    cols = c(mfcc_infant, mfcc_toddler, mfcc_preschool),  # Select columns for different age groups
+    names_to = "age_group",  # New column for age groups
+    values_to = "median_price"  # Values will go in a column called "median_price"
+  ) %>%
+  mutate(age_group = recode(age_group, 
+                            mfcc_infant = "Infant", 
+                            mfcc_toddler = "Toddler", 
+                            mfcc_preschool = "Preschooler"))  # Rename age groups for readability
+
+# Create the plot
+ggplot(ca_childcare_long, aes(x = study_year, y = median_price, color = region)) +
+  geom_point(alpha = 0.5) +  
+  geom_smooth(method = "loess", se = FALSE) +  # Loess smoother without confidence intervals
+  facet_wrap(~ age_group, scales = "free_y", ncol = 3) +  # Facet by age group with 3 columns
+  labs(
+    title = "Weekly Median Price for Center-Based Childcare ($)",
+    subtitle = "",
+    x = "Study Year",
+    y = "Median Price (USD)",
+    color = "California Region"  # Label for the color legend
+  ) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +  # Adjust x-axis breaks
+  scale_y_continuous(limits = c(100, 500)) +  # Match y-axis limits
+  theme_minimal() +  # Use a clean theme
+  theme(
+    legend.position = "right",  # Place the legend to the right
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for better readability
+    panel.grid.minor = element_blank(),  # Hide minor grid lines for clarity
+    strip.text = element_text(face = "bold", size = 12),  # Bold facet labels
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")  # Center and bold title
+  )
 
 ```
 
 **DVS-3: I show creativity in my visualizations**
 
--   I can use non-standard colors
+-   I can use non-standard colors\
+    Location Challenge 3, Problem 2
 
 ```{r}
 #| label: dvs-3-1
-
+# code chunk for Q13
+ggplot(data = teacher_evals_compare, aes(x = sen_level, fill = SET_level)) +
+  geom_bar(position = "fill") +  
+  labs(
+    title = "Number of Sections",
+    x = "Seniority of Instructor", 
+    y = "Proportion",
+    fill = "SET Level"  # Legend title
+  ) +
+  scale_fill_manual(values = c("steelblue", "orange3")) +  
+  theme_minimal()  
 ```
 
--   I can use annotations
+\
+
+-   I can use annotations\
+    Location Lab 1, Question 6
 
 ```{r}
 #| label: dvs-3-2
-
+# Second Plot: Boxplot for Dose with a caption
+ToothGrowth %>% 
+  mutate(dose = as.factor(dose)) %>% 
+  ggplot(mapping = aes(x = dose, y = len)) +
+  geom_boxplot() +
+  labs(x = "Dose of Supplement (mg/day)", 
+       y = "Length of Teeth (mm)", 
+       caption = "Figure 2: Boxplot showing the effect of supplement dose on tooth length.")
 ```
 
--   I can be creative...
+-   I can be creative...\
+    Location, Lab 4, Part 6
 
 ```{r}
 #| label: dvs-3-3
+ Reshape the dataset to create a long format
+ca_childcare_long <- ca_childcare %>%
+  pivot_longer(
+    cols = c(mfcc_infant, mfcc_toddler, mfcc_preschool),  # Select columns for different age groups
+    names_to = "age_group",  # New column for age groups
+    values_to = "median_price"  # Values will go in a column called "median_price"
+  ) %>%
+  mutate(age_group = recode(age_group, 
+                            mfcc_infant = "Infant", 
+                            mfcc_toddler = "Toddler", 
+                            mfcc_preschool = "Preschooler"))  # Rename age groups for readability
+
+# Create the plot
+ggplot(ca_childcare_long, aes(x = study_year, y = median_price, color = region)) +
+  geom_point(alpha = 0.5) +  
+  geom_smooth(method = "loess", se = FALSE) +  # Loess smoother without confidence intervals
+  facet_wrap(~ age_group, scales = "free_y", ncol = 3) +  # Facet by age group with 3 columns
+  labs(
+    title = "Weekly Median Price for Center-Based Childcare ($)",
+    subtitle = "",
+    x = "Study Year",
+    y = "Median Price (USD)",
+    color = "California Region"  # Label for the color legend
+  ) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +  # Adjust x-axis breaks
+  scale_y_continuous(limits = c(100, 500)) +  # Match y-axis limits
+  theme_minimal() +  # Use a clean theme
+  theme(
+    legend.position = "right",  # Place the legend to the right
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for better readability
+    panel.grid.minor = element_blank(),  # Hide minor grid lines for clarity
+    strip.text = element_text(face = "bold", size = 12),  # Bold facet labels
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")  # Center and bold title
+  )
 
 ```
 
 **DVS-4: I can calculate numerical summaries of variables.**
 
--   Example using `summarize()`
+-   Example using `summarize()`Location: Lab 1, under practicing-running-code
 
 ```{r}
-#| label: dvs-4-summarize
+#| label: dvs-4-summarize 
+
+# Load a dataset into the R Environment.
+data(ToothGrowth)
+
+# Look at the summary of the variables in the dataset.
+summary(ToothGrowth)
 
 ```
+
+\
 
 -   Example using `across()`
 
@@ -308,36 +542,60 @@ I've done this in the following provided assignments:
 
 ```
 
-**DVS-5: I can find summaries of variables across multiple groups.**
+**DVS-5: I can find summaries of variables across multiple groups.\
+\
+**
 
--   Example 1
+-   Example 1\
+    Location: Lab 4, Question 4
 
 ```{r}
 #| label: dvs-5-1
-
+group_by(region, study_year) %>%  # Group by region and year
+summarize(median_income = median(mhi_2018, na.rm = TRUE)) %>%  # median household income
 ```
 
--   Example 2
+-   Example 2\
+    Location: Lab 4, Question 5
 
 ```{r}
 #| label: dvs-5-2
-
+group_by(region) %>%  # group by region
+summarize(median_price_infant = median(mfcc_infant, na.rm = TRUE)) %>%  # calc median infant price
 ```
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
 
--   Example 1
+-   Example 1\
+    Location: lab 3, Question 7
 
 ```{r}
 #| label: dvs-6-1
+# code chunk for Q7
+teacher_evals_clean %>%
+  group_by(academic_degree, sex) %>%
+  summarise(
+    avg_seniority = mean(seniority, na.rm = TRUE),
+    min_seniority = min(seniority, na.rm = TRUE),
+    max_seniority = max(seniority, na.rm = TRUE),
+    count_instructors = n()
+  ) %>%
+  print()
 
 ```
 
--   Example 2
+-   Example 2\
+    Location: lab 3, Question 7
 
 ```{r}
 #| label: dvs-6-2
-
+# code chunk for Q8
+teacher_evals_clean %>%
+  group_by(course_id, teacher_id) %>%
+  summarise(num_questions = n_distinct(question_no)) %>%
+  filter(num_questions == 9) %>%
+  count() %>%
+  print()
 ```
 
 **DVS-7: I show creativity in my tables.**
@@ -360,11 +618,16 @@ I've done this in the following provided assignments:
 
 **PE-1: I can write concise code which does not repeat itself.**
 
--   using a single function call with multiple inputs (rather than multiple function calls)
+-   using a single function call with multiple inputs (rather than multiple function calls)\
+    Location: Lab 3, Question 7
 
 ```{r}
 #| label: pe-1-one-call
-
+# code chunk for Q7
+teacher_evals_clean %>%
+  filter(if_any(everything(), is.na)) %>%
+  select(course_id, teacher_id, everything()) %>%
+  print()
 ```
 
 -   `across()`
@@ -429,11 +692,18 @@ I've done this in the following provided assignments:
 
 ```
 
--   I can connect a data wrangling pipeline into a `ggplot()`
+-   I can connect a data wrangling pipeline into a `ggplot()`Locaiton : Lab 1, Question 6
 
 ```{r}
 #| label: pe-4-2
-
+# Second Plot: Boxplot for Dose with a caption
+ToothGrowth %>% 
+  mutate(dose = as.factor(dose)) %>% 
+  ggplot(mapping = aes(x = dose, y = len)) +
+  geom_boxplot() +
+  labs(x = "Dose of Supplement (mg/day)", 
+       y = "Length of Teeth (mm)", 
+       caption = "Figure 2: Boxplot showing the effect of supplement dose on tooth length.")
 ```
 
 ## Data Simulation & Statisical Models
@@ -472,16 +742,55 @@ I've done this in the following provided assignments:
 
 ## Revising My Thinking
 
-<!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
+<!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->\
+\
+I am a huge fan of feedback especially really detailed feedback because it helps me improve my code by understanding exactly what it is I got wrong but more so understand how to improve my code. So every time I received feedback I would go back to my code and implement changes especially if they were significant like have species id vs species in my tables. or for example I received feedback on combining some filter calls into one which is an easy fix I implemented. I think over the course so far Ive made sure to eliminate problems/ issues with my code like always having code folding and a couple other lines in my yaml and try to make sure I dont get the same recurring mistakes or feedback in the following assignments.
 
-<!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
+<!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->\
+\
+Lab two feed back and revisions, i think this is the best example of how I used revisions to change major and minor things details which I later didn't need to fix as i learned from editing my code. \
+Initial feed back :
+
+**Q1: Importing Data: You are expected to use the here() function from the here package to load in your data, not relative paths.\
+Q3: Data Types of Variables: Could you write these as an itemized list so they are easier to read?\
+Q6: Scatterplot Faceted by Species: Technically, I asked for species not species_id.\
+Q7: Add Plot Title and Labels: Nice work figuring out how to center the plot title. However, best practices for plot titles is to have them left aligned.\
+Q10: Side-by-Side Boxplots: Technically, I asked for species not species_id. This changes what you need to do in Q15.\
+Q15: Add Labels & Possibly Tilt Names: What are these species of? If your title says species, do you need to have that included in your axis label?\
+When you change to species, you will see why you need to rotate your axis labels...\
+Q18: ANOVA Conclusion: Careful! You say two different conclusions.\
+1. at least one group is different\
+2. there is a significant difference in the means of the species. \
+Which is the correct conclusion?\
+\
+**
+
+Revision:
+
+I now know how to use the here , although my file path does work , I can see why its nice to use the here() function so i re did the loading in my csv file. Will make sure to load in data in the future the way that is specified.
+
+changed up my scatter plot. I ended up just re doing it. I think i got confused and went down the wrong path of making. BUt now im more confident in what I am creating in my file.
+
+For question 10 I used species id instead of just species. I need to be more careful when reading what variables I am using in my code. So in future labs I will be paying more attention.
+
+for question 15 I changed my axis labels. I can see the importants of being specific in my labels. It is an important part of making professional documents which is the goal of what I am doing. I will be making sur eto be as specifc as possible in my future creation of labels.
+
+quesrion 18 I made a revised/ added a conclusion from my findings. I think I just didnt think my answer through . for future I need to make sure I read through the question and make sure I give a concrete conclusion from my findings.
+
+\
 
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
 
+I think this course makes the thinking behind the code I use to achieve tasks develop with every project we do. I think my code shows that with each lab or activity ive been eliminating key issues and improve the efficiency and overall structure of my code. For example the murder mystery lab was really a free for all and a creative sandbox to use everything I have learned so far. And showing my step by step process in that lab along with other works has demonstrated what I have been learning and improving over the course so far.
+
 ## Peer Support & Collaboration
 
-<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->
+<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->\
+![](images/Screen Shot 2024-11-03 at 9.07.29 PM.png)
 
-<!-- Include a description of how you grew as a collaborator through the weekly pair programming activities.   -->
+<!-- Include a description of how you grew as a collaborator through the weekly pair programming activities.   -->\
+\
+I think over the course so far Ive gotten a lot better at working together instead of divding tasks. I think its really easy to just say "you do this Ill do this " but working together has proven to be more productive because i actually better understand the flow of what we are doing. I have found that switching off is really efficient when learning knew functions and understanding the new libraries and functions we are using. \
+\
