@@ -6,12 +6,16 @@ editor: visual
 
 As we’ve said in the class efficiency is a pivotal component of statistical computing (and data science). In this essay, give an explanation of what that term “efficiency” means in relation to statistical computing and describe some places where you encountered efficiency and understood its importance. Your essay should address the following questions:
 
--   What is the definition of “efficiency”?
+Answer each of the following questions with one sentence including a brief explanation.
 
--   What does efficiency look like in statistical computing / data science?
+Finish the sentence with another student’s name: "If [Name of Student] doesn’t earn an A, then nobody should, because..." Explain your choice and your reasoning. To be completely honest i didnt look at anyone code other than partner activities so in this class its pretty hard to say who does and doesn't deserve an A. I had a pretty good experience working with Alex Lung so I guess he would be the name I put forward but a genuinely have no clue what his code, work ethic etc looks like outside of partner work. 
 
--   What does efficiency allow you to do?
+What was the most difficult part of the class for you? List a general topic, a specific problem, a kind of work we did, etc. and explain why.To me its really hard to remember all the names and what exactly each function does. But in practice all it takes is assessing what exactly I am trying to achieve then understanding what functions I need. I think re creating plots is the hardest task. 
 
--   Why is efficiency important?
+What was the easiest part of the class for you? Explain why.I think the easiest part of the class for me was the first couple weeks because I had taken stats 313 so I was already prepared for what was coming. That class really does prepare you for 331. 
 
--   Where did you encounter efficiency, and what were some [“a-ha” moments](https://www.merriam-webster.com/dictionary/aha%20moment) you had about efficiency? (For the latter, tie each a-ha moment to an artifact in the portfolio.)
+What part of the class surprised or interested you the most? Explain why.I liked the function writing. I am a computer science major as well so it was cool to finally be able to write some functions and understand why they are more efficient than just writing repeated function calls. 
+
+Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
+
+Make sure you come with an open mind and a growth mindset. An incomplete doesnt mean your code sucks, or you did something wrong. Its an opportunity to grow. Also stay on top of your assignments and don't get surprised by deadlines because they are always consistent. Plan ahead. 
