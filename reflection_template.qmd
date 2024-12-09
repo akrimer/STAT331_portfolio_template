@@ -13,6 +13,8 @@ execute:
 
 [**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_A-.
 
+I belive I have met all or atleast almost all the objectives from a analytic standpoint. I have been a great team member and have continued to show growth and continued learning. I have worked really hard in this class and i think my work shows my effort and growth. 
+
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from Lab or Challenge assignments where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
 ## Working with Data
